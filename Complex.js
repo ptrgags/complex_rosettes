@@ -71,5 +71,11 @@ class Complex {
         const new_r = Math.pow(r, n);
         const new_theta = theta * n;
         return Complex.from_polar(new_r, new_theta);
-    }   
+    }
+    
+    static from_polar(r, theta) {
+        const x = r * Math.cos(theta);
+        const y = r * Math.sin(theta);
+        return new Complex(x, y);
+    }
 }

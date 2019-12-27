@@ -25,3 +25,18 @@ function color_wheel(z, n, zero_threshold, large_threshold) {
     
     return color(hue, saturation, brightness);
 }
+
+function grey_wheel(z, n, zero_threshold, large_threshold) {
+    const r = z.mod;
+    const theta_normalized = z.arg / TWO_PI;
+    const bucket = Math.floor(theta_normalized * n);
+    const brightness = bucket / n;
+    
+    if (r < zero_threshold) {
+        return color(0.75, 1.0, 0.3);
+    } else if (r > large_threshold) {
+        return color(0.5, 1.0, 0.3);
+    }
+    
+    return color(0.1, 0.5, brightness);
+}

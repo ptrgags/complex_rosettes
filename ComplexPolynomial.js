@@ -19,13 +19,13 @@ class ComplexPolynomial {
      * of objects that need to be computed.
      */
     compute(z) {
-        let sum = Complex(0, 0);
+        let sum = new Complex(0, 0);
         
         const r = z.mod;
         const theta = z.arg;
         for (const [n_freq, m_freq, amp, phase] of this.terms) {
             const mod = amp * Math.pow(r, n_freq + m_freq);
-            const arg = theta * (n_freq - m_freq) + phase;
+            const arg = theta * (n_freq - m_freq) - phase;
             const term = Complex.from_polar(mod, arg);
             // Optimization note: if needed, add a function to
             // add the sum in place. Furthermore, the 
@@ -35,5 +35,7 @@ class ComplexPolynomial {
             // a scratch variable.
             sum = sum.add(term);
         }
+        
+        return sum;
     }
 }

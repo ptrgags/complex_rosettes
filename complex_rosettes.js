@@ -1,19 +1,21 @@
-const MAX_X = 2.0;
+const MAX_X = 1.5;
 const THICKNESS = 2.0;
-const COLOR_WHEEL_SECTORS = 10;
+const COLOR_WHEEL_SECTORS = 5 * 1;
+const ZERO_THRESHOLD = 0.2;
+const MAX_THRESHOLD = 1e9;
+const PALETTE = grey_wheel;
 
-let display_polynomial = false;
+let display_polynomial = true;
 
 function setup() {
     createCanvas(500, 750);
     background(0);
     refresh();
-    show_color_wheel();
 }
 
 function refresh() {
     if (display_polynomial) {
-        background(0);
+        compute_polynomial();
     } else {
         show_color_wheel();
     }
@@ -34,7 +36,22 @@ function show_color_wheel() {
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
             const z = get_z(x, y);
-            const c = color_wheel(z, COLOR_WHEEL_SECTORS, 0.1, MAX_X);
+            const c = PALETTE(z, COLOR_WHEEL_SECTORS, 0.1, MAX_X);
+            noFill();
+            stroke(c);
+            point(x, y);
+        }
+    }
+    disable_hsb();
+}
+
+function compute_polynomial() {
+    enable_hsb();
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            const z = get_z(x, y);
+            const w = POLYNOMIAL.compute(z);
+            const c = PALETTE(w, COLOR_WHEEL_SECTORS, ZERO_THRESHOLD, MAX_THRESHOLD);
             noFill();
             stroke(c);
             point(x, y);
