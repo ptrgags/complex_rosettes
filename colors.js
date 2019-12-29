@@ -102,7 +102,29 @@ class RadiusBrightness extends Palette {
     }
 }
 
+class Checkerboard extends Palette {
+    constructor(params) {
+        super({
+            hue: 0.0,
+            saturation: 0.5,
+            ...params,
+        });
+    }
+    
+    color_impl(z) {
+        const x = Math.floor(z.real);
+        const y = Math.floor(z.imag);
+        const parity = (Math.abs(x) + Math.abs(y)) % 2;
+        
+        return color(this.params.hue, this.params.saturation, parity);
+    }
+}
+
 const PALETTES = {
+    "2-shade yellow sectors": new AngleBrightness({
+        hue: 1/6,
+        num_sectors: 2, 
+    }),
     "3-color rainbow sectors": new ColorWheel({
         num_sectors: 3,
     }),
@@ -116,6 +138,14 @@ const PALETTES = {
         num_sectors: 7,
         max_value: 3.0,
     }),
+    "10-shade blue sectors": new AngleBrightness({
+        hue: 0.6,
+        num_sectors: 10,
+    }),
+    "6-shade purple sectors": new AngleBrightness({
+        hue: 2/3,
+        num_sectors: 6,
+    }),
     "20-shade red rings": new RadiusBrightness({
         num_sectors: 20,
         hue: 0.01,
@@ -123,8 +153,8 @@ const PALETTES = {
         max_value: 3.0,
         zero_threshold: 0.01,
     }),
-    "10-shade blue sectors": new AngleBrightness({
-        hue: 0.6,
-        num_sectors: 10,
+    "checkerboard": new Checkerboard({
+        hue: 0.0,
+        max_threshold: 10.0,
     }),
 };
