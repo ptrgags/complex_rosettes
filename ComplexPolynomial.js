@@ -38,4 +38,13 @@ class ComplexPolynomial {
         
         return sum;
     }
+    
+    /**
+     * Scale the polynomial by scaling all the amplitudes
+     */
+    scale(r) {
+        return new ComplexPolynomial(this.terms.map(([n, m, amp, phase]) => {
+            return [n, m, amp * r, phase,];
+        }));
+    }
 }
