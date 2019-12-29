@@ -1,17 +1,17 @@
 const PI = Math.PI;
 const ROSETTES = {
+    "2-fold symmetry take 1": new ComplexPolynomial([
+        [1, 1, 1, 0,],
+        [-1, 3, 1/2, 0,],
+        [1, 3, 3/4, 0,],
+        [-3, 5, 1/8, 0,],
+    ]),
     "2-fold symmetry take 2": new ComplexPolynomial([
         [-1, 3, 1/2, 0,],
         [1, 3, 3/4, PI/6,],
         [-5, 7, 1/2, 0,],
         [-3, 5, 1/8, PI,],
         [-9, 3, 1/64, 0,],
-    ]),
-    "2-fold symmetry take 1": new ComplexPolynomial([
-        [1, 1, 1, 0,],
-        [-1, 3, 1/2, 0,],
-        [1, 3, 3/4, 0,],
-        [-3, 5, 1/8, 0,],
     ]),
     "3-fold symmetry take 1": new ComplexPolynomial([
         [0, 0, 1, 0,],
