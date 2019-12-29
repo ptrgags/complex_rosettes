@@ -15,7 +15,7 @@ class Palette {
             max_threshold: 1e9,
             zero_color: [0.75, 1.0, 0.3,],
             max_color: [0.5, 1.0, 0.3,],
-            ...params
+            ...params,
         };
     }
     
@@ -44,57 +44,87 @@ class Palette {
     }
 }
 
-class ColorWheel extends Palette{
+class ColorWheel extends Palette {
+    constructor(params) {
+        super({
+            saturation: 0.8,
+            brightness: 0.8,
+            ...params,
+        });
+    }
+    
     color_impl(z) {
         const n = this.params.num_sectors;
         const theta_normalized = z.arg / TWO_PI;
         const bucket = Math.floor(theta_normalized * n);
         const hue = bucket / n;
-    
-        let saturation = 0.8;
-        let brightness = 0.8;
-        return color(hue, saturation, brightness);
+        
+        return color(hue, this.params.saturation, this.params.brightness);
     }
 }
 
-/*
-function angle_brightness(z, n, zero_threshold, large_threshold) {
-    const r = z.mod;
-    const theta_normalized = z.arg / TWO_PI;
-    const bucket = Math.floor(theta_normalized * n);
-    const brightness = bucket / n;
-    
-    if (r < zero_threshold) {
-        return color(0.75, 1.0, 0.3);
-    } else if (r > large_threshold) {
-        return color(0.5, 1.0, 0.3);
+class AngleBrightness extends Palette {
+    constructor(params) {
+        super({
+            hue: 0.1,
+            saturation: 0.5,
+            ...params,
+        });
     }
     
-    return color(0.1, 0.5, brightness);
+    color_impl(z) {
+        const n = this.params.num_sectors;
+        const theta_normalized = z.arg / TWO_PI;
+        const bucket = Math.floor(theta_normalized * n);
+        const brightness = bucket / n;
+        
+        return color(this.params.hue, this.params.saturation, brightness);
+    }
 }
 
-function radius_brightness(z, n, zero_threshold, large_threshold) {
-    const SHELLS = 10;
-    const r = z.mod;
-    const r_normalized = r / large_threshold; 
-    const bucket = Math.floor(r_normalized * SHELLS);
-    const brightness = bucket / SHELLS;
-    
-    if (r < zero_threshold) {
-        return color(0.75, 1.0, 0.3);
-    } else if (r > large_threshold) {
-        return color(0.5, 1.0, 0.3);
+class RadiusBrightness extends Palette {
+    constructor(params) {
+        super({
+            hue: 0.3,
+            saturation: 0.5,
+            max_value: 0.5,
+            ...params,
+        });
     }
     
-    return color(0.2, 0.5, brightness);
+    color_impl(z) {
+        const n = this.params.num_sectors;
+        const r_normalized = z.mod / this.params.max_value;
+        const bucket = Math.floor(r_normalized * n);
+        const brightness = bucket / n;
+        
+        return color(this.params.hue, this.params.saturation, brightness);
+    }
 }
-*/
 
 const PALETTES = {
-    "3-color rainbow": new ColorWheel({
+    "3-color rainbow sectors": new ColorWheel({
         num_sectors: 3,
     }),
-    "5-color rainbow": new ColorWheel({
+    "5-color rainbow sectors": new ColorWheel({
         num_sectors: 5,
+    }),
+    "5-shade tan sectors": new AngleBrightness({
+        num_sectors: 5,
+    }),
+    "7-shade green rings": new RadiusBrightness({
+        num_sectors: 7,
+        max_value: 3.0,
+    }),
+    "20-shade red rings": new RadiusBrightness({
+        num_sectors: 20,
+        hue: 0.01,
+        saturation: 0.5,
+        max_value: 3.0,
+        zero_threshold: 0.01,
+    }),
+    "10-shade blue sectors": new AngleBrightness({
+        hue: 0.6,
+        num_sectors: 10,
     }),
 };
