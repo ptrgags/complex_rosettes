@@ -1,5 +1,85 @@
 const PI = Math.PI;
 const ROSETTES = {
+    // like double inversion but with some phase shifts
+    "double inversion twist": new ComplexPolynomial([
+        [1, 0, 1, 0,],
+        [0, 1, 1, 0,],
+        [-1, 0, 1, 0,],
+        [0, -1, 1, 0,],
+        [2, 1, 1/8, PI/2,],
+        [1, 2, 1/8, PI/2,],
+        [-2, -1, 1/8, PI/2,],
+        [-1, -2, 1/8, PI/2,],
+        [3, 1, 1/4, 0,],
+        [1, 3, 1/4, 0,],
+        [-3, -1, 1/4, 0,],
+        [-1, -3, 1/4, 0,],
+    ]),
+    // reciprocal + circular inversion symmetry: f(1/z) = f(z)
+    // a_nm = a_(-n)(-m) = a_(-m)(-n) = a_mn
+    "double inversion symmetry": new ComplexPolynomial([
+        [1, 0, 1, 0,],
+        [0, 1, 1, 0,],
+        [-1, 0, 1, 0,],
+        [0, -1, 1, 0,],
+        [2, 1, 1/8, 0,],
+        [1, 2, 1/8, 0,],
+        [-2, -1, 1/8, 0,],
+        [-1, -2, 1/8, 0,],
+        [3, 1, 1/4, 0,],
+        [1, 3, 1/4, 0,],
+        [-3, -1, 1/4, 0,],
+        [-1, -3, 1/4, 0,],
+    ]),
+    // circle inversion symmetry: f(1/conj(z))) = f(z)
+    // a_(-m)(-n) = a_nm
+    "circle inversion symmetry": new ComplexPolynomial([
+        [1, 1, 1, 0,],
+        [-1, -1, 1, 0,],
+        [2, 1, 1/2, 0,],
+        [-1, -2, 1/2, 0,],
+        [3, 1, 1/3, 0,],
+        [-1, -3, 1/3, 0,],
+    ]),
+    // circle inversion symmetry with some phase shifts
+    "circle inversion twist": new ComplexPolynomial([
+        [1, 1, 1, 0,],
+        [-1, -1, 1, 0,],
+        [2, 1, 1/2, PI/3,],
+        [-1, -2, 1/2, PI/3,],
+        [3, 1, 1/3, 0,],
+        [-1, -3, 1/3, 0,],
+    ]),
+    // reciprocal inversion symmetry: f(1/z) = f(z)
+    // a_(-n)(-m) = a_nm
+    "reciprocal symmetry": new ComplexPolynomial([
+        [1, 1, 1, 0,],
+        [-1, -1, 1, 0,],
+        [2, 1, 1/2, 0,],
+        [-2, -1, 1/2, 0,],
+        [3, 1, 1/3, 0,],
+        [-3, -1, 1/3, 0,],
+    ]),
+    // reflection symmetry: f(conj(z)) = f(z)
+    // a_mn = a_nm
+    "reflection symmetry": new ComplexPolynomial([
+        [1, 0, 1/4, 0,],
+        [0, 1, 1/4, 0,],
+        [2, 0, 1/8, 0,],
+        [0, 2, 1/8, 0,],
+        [3, 0, 1, 0,],
+        [0, 3, 1, 0,],
+    ]),
+    // color flipping: f(conj(z)) = conj(f(z))
+    // a_nm real
+    "reflection anti-symmetry": new ComplexPolynomial([
+        [1, 0, 1, 0,],
+        [2, 0, 1/2, 0,],
+        [3, 0, 1/3, 0,],
+        [4, 0, 1/4, 0,],
+        [5, 0, 1/5, 0,],
+        [6, 0, 1/6, 0,],
+    ]),
     "2-fold symmetry take 1": new ComplexPolynomial([
         [1, 1, 1, 0,],
         [-1, 3, 1/2, 0,],

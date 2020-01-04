@@ -7,6 +7,7 @@ let palette = PALETTES[Object.keys(PALETTES)[0]];
 let pattern = ROSETTES[Object.keys(ROSETTES)[0]];
 
 let display_polynomial = true;
+let images = {};
 
 function make_rosette_select() {
     const sel = createSelect();
@@ -38,6 +39,12 @@ function change_palette(e) {
     refresh();
 }
 
+function preload() {
+    images = {
+        abstract: loadImage('abstract.jpg'),
+    };
+}
+
 function setup() {
     createCanvas(2 * 500, 750);
     background(0);
@@ -62,7 +69,7 @@ function get_z(x, y) {
 }
 
 function show_color_wheel() {
-    enable_hsb();
+    enable_hsb(palette);
     for (let x = 0; x < width / 2; x++) {
         for (let y = 0; y < height; y++) {
             const z = get_z(x, y);
@@ -72,7 +79,7 @@ function show_color_wheel() {
             point(x + width / 2, y);
         }
     }
-    disable_hsb();
+    disable_hsb(palette);
     
     fill(255);
     stroke(0);
@@ -81,7 +88,7 @@ function show_color_wheel() {
 }
 
 function compute_polynomial() {
-    enable_hsb();
+    enable_hsb(palette);
     for (let x = 0; x < width / 2; x++) {
         for (let y = 0; y < height; y++) {
             const z = get_z(x, y);
@@ -92,7 +99,7 @@ function compute_polynomial() {
             point(x, y);
         }
     }
-    disable_hsb();
+    disable_hsb(palette);
 }
 
 function keyReleased() {

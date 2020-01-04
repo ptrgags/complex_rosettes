@@ -1,9 +1,17 @@
-function enable_hsb() {
+function enable_hsb(palette) {
+    if (!palette.uses_hsb) {
+        return;
+    }
+    
     colorMode(HSB, 1, 1, 1, 1);
 }
 
-function disable_hsb() {
-    colorMode(RGB, 255);
+function disable_hsb(palette) {
+    if (!palette.uses_hsb) {
+        return;
+    }
+    
+    colorMode(RGB, 255, 255, 255, 255);
 }
 
 let foo = false;
@@ -17,6 +25,10 @@ class Palette {
             max_color: [0.5, 1.0, 0.3,],
             ...params,
         };
+    }
+    
+    get uses_hsb() {
+        return true;
     }
     
     /**
@@ -120,13 +132,50 @@ class Checkerboard extends Palette {
     }
 }
 
+class Texture extends Palette {
+    constructor(params) {
+        super({
+            image_id: undefined,
+            max_x: 1.0,
+            max_y: 1.0,
+            ...params,
+        });
+    }
+    
+    get uses_hsb() {
+        return false;
+    }
+    
+    color_impl(z) {
+        const img = images[this.params.image_id];
+        const cx = 0.5 * img.width;
+        const cy = 0.5 * img.height;
+        const x = z.real / this.params.max_x * cx;
+        const y = z.imag / this.params.max_y * -cy;
+        
+        try {
+            return img.get(cx + x, cy + y);
+        } catch(e) {
+            return color(255, 0, 255, 255);
+        }
+    }
+}
+
 const PALETTES = {
+    "abstract texture": new Texture({
+        image_id: "abstract",
+        max_x: 5.0,
+        max_y: 5.0,
+    }),
     "2-shade yellow sectors": new AngleBrightness({
         hue: 1/6,
         num_sectors: 2, 
     }),
     "3-color rainbow sectors": new ColorWheel({
         num_sectors: 3,
+    }),
+    "4-color rainbow sectors": new ColorWheel({
+        num_sectors: 4,
     }),
     "5-color rainbow sectors": new ColorWheel({
         num_sectors: 5,
@@ -155,6 +204,10 @@ const PALETTES = {
     }),
     "checkerboard": new Checkerboard({
         hue: 0.0,
+        max_threshold: 10.0,
+    }),
+    "lime checkerboard": new Checkerboard({
+        hue: 0.2333,
         max_threshold: 10.0,
     }),
 };
