@@ -1,5 +1,21 @@
 const PI = Math.PI;
 const ROSETTES = {
+    // scaling symmetry
+    // only include terms with n = -m
+    "radial symmetry": new ComplexPolynomial([
+        [0, 0, 1, 0,],
+        [1, -1, 1/2, 0,],
+        [2, -2, 1/3, 0,],
+        [3, -3, 1/4, 0,],
+    ]),
+    // infinite-fold rotational symmetry!
+    // only include terms with n = m
+    "ring symmetry": new ComplexPolynomial([
+        [0, 0, 1, 0,],
+        [1, 1, 1/2, 0,],
+        [2, 2, 1/3, 0,],
+        [3, 3, 1/4, 0,],
+    ]),
     // like double inversion but with some phase shifts
     "double inversion twist": new ComplexPolynomial([
         [1, 0, 1, 0,],
@@ -80,6 +96,11 @@ const ROSETTES = {
         [5, 0, 1/5, 0,],
         [6, 0, 1/6, 0,],
     ]),
+    // 2-fold rotational symmetry: f(rotate(z, (2pi) / 2)) = f(z)
+    // m = n (mod 2)
+    //
+    // in general, there will be p-fold rotational symmetry if
+    // m = n (mod p)
     "2-fold symmetry take 1": new ComplexPolynomial([
         [1, 1, 1, 0,],
         [-1, 3, 1/2, 0,],
