@@ -3,6 +3,7 @@ const THICKNESS = 2.0;
 const COLOR_WHEEL_SECTORS = 5 * 1;
 const ZERO_THRESHOLD = 0.2;
 const MAX_THRESHOLD = 1e9;
+const POINTS_PER_FRAME = 2000;
 let palette = PALETTES[Object.keys(PALETTES)[0]];
 let pattern = ROSETTES[Object.keys(ROSETTES)[0]];
 
@@ -21,7 +22,7 @@ function make_rosette_select() {
 function change_rosette(e) {
     const selected = e.target.value;
     pattern = ROSETTES[selected];
-    refresh();
+    background(0);
 }
 
 function make_palette_select() {
@@ -36,7 +37,7 @@ function make_palette_select() {
 function change_palette(e) {
     const selected = e.target.value;
     palette = PALETTES[selected];
-    refresh();
+    background(0);
 }
 
 function preload() {
@@ -50,6 +51,10 @@ function setup() {
     background(0);
     make_rosette_select();
     make_palette_select();
+    refresh();
+}
+
+function draw() {
     refresh();
 }
 
@@ -68,36 +73,39 @@ function get_z(x, y) {
     return new Complex(u, v);
 }
 
+function random_box(x, y, w, h) {
+    const rand_x = round(w * random() + x);
+    const rand_y = round(h * random() + y);
+    return [rand_x, rand_y];
+}
+
 function show_color_wheel() {
     enable_hsb(palette);
-    for (let x = 0; x < width / 2; x++) {
-        for (let y = 0; y < height; y++) {
-            const z = get_z(x, y);
-            const c = palette.get_color(z);
-            noFill();
-            stroke(c);
-            point(x + width / 2, y);
-        }
+    for (let i = 0; i < POINTS_PER_FRAME; i++) {
+        const [x, y] = random_box(0, 0, width / 2, height);
+        const z = get_z(x, y);
+        const c = palette.get_color(z);
+        noFill();
+        stroke(c);
+        point(x + width / 2, y);
     }
     disable_hsb(palette);
     
     fill(255);
     stroke(0);
     textSize(16);
-    text("Color palette:", width / 2 + 10, 24);
 }
 
 function compute_polynomial() {
     enable_hsb(palette);
-    for (let x = 0; x < width / 2; x++) {
-        for (let y = 0; y < height; y++) {
-            const z = get_z(x, y);
-            const w = pattern.compute(z);
-            const c = palette.get_color(w);
-            noFill();
-            stroke(c);
-            point(x, y);
-        }
+    for (let i = 0; i < POINTS_PER_FRAME; i++) {
+        const [x, y] = random_box(0, 0, width / 2, height);
+        const z = get_z(x, y);
+        const w = pattern.compute(z);
+        const c = palette.get_color(w);
+        noFill();
+        stroke(c);
+        point(x, y);
     }
     disable_hsb(palette);
 }
@@ -105,6 +113,6 @@ function compute_polynomial() {
 function keyReleased() {
     if (key === ' ') {
         display_polynomial = !display_polynomial;
-        refresh();
+        background(0);
     }
 }
